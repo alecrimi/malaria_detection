@@ -12,7 +12,7 @@ import tensorflow as tf
 
 import datetime # For log
 
-base_dir = os.path.join('./cell_images')
+base_dir = os.path.join('/content/')
 infected_dir = os.path.join(base_dir,'Parasitized')
 healthy_dir = os.path.join(base_dir,'Uninfected')
 
