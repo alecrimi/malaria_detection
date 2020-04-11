@@ -153,7 +153,7 @@ history = model.fit(x=train_imgs_scaled, y=train_labels_enc,
                     callbacks=callbacks,
                     verbose=1)
 
-
+import matplotlib.pyplot as plt
 f, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 4))
 t = f.suptitle('Basic CNN Performance', fontsize=12)
 f.subplots_adjust(top=0.85, wspace=0.3)
@@ -177,9 +177,3 @@ ax2.set_title('Loss')
 l2 = ax2.legend(loc="best")
 
 model.save('vgg_frozen.h5')
-
-
-
-
-
-
