@@ -152,6 +152,22 @@ reduce_lr = tf.keras.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.5,
 
 #early_stop = tf.keras.callbacks.EarlyStopping(monitor='val_loss', min_delta=0, patience=15, 
 #                                              mode='auto', baseline=None, restore_best_weights=False)
+
+
+train_datagen = tf.keras.preprocessing.image.ImageDataGenerator(rescale=1./255,
+                                                                zoom_range=0.05,
+                                                                rotation_range=25,
+                                                                width_shift_range=0.05,
+                                                                height_shift_range=0.05,
+                                                                shear_range=0.05, horizontal_flip=True,
+                                                                fill_mode='nearest')
+
+val_datagen = tf.keras.preprocessing.image.ImageDataGenerator(rescale=1./255)
+
+# build image augmentation generators
+train_generator = train_datagen.flow(train_data, train_labels_enc, batch_size=BATCH_SIZE, shuffle=True)
+val_generator = val_datagen.flow(val_data, val_labels_enc, batch_size=BATCH_SIZE, shuffle=False)
+
 callbacks = [reduce_lr, tensorboard_callback]
 train_steps_per_epoch = train_generator.n // train_generator.batch_size
 val_steps_per_epoch = val_generator.n // val_generator.batch_size
