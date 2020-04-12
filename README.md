@@ -7,7 +7,13 @@ Acquisition is carried out by blood smear stained with Giemsa (protocol below) a
 Captured images and then processed and feeded to a pretrained DeepLearning architecture.
 Ultimately the diagnosis is mapped on a GIS system by using ArcPy.
 The deeplearning architecture should run on a normal PC, a RaspberryPI or be integrated into an Android app.
+.pull-left[
+<img src="http://phdcomics.com/comics/archive/phd101212s.gif" width=300 height=400>
+]
 
+.pull-right[
+<img src="http://phdcomics.com/comics/archive/phd052810s.gif" width=300 height=242>
+]
 <img src="https://github.com/alecrimi/malaria_detection/blob/master/overall.jpg" width="200" height="250" />
 <img src="https://github.com/alecrimi/malaria_detection/blob/master/FB_IMG_1582996617130.jpg" width="200" height="250" />
  
