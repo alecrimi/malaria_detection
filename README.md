@@ -1,5 +1,10 @@
-# malaria_detection
-malaria_detection
+# Current advancement on our Malaria project
+The idea is to have a complete system for acquisition, detection and report of malaria cases
+
+Acquisition is carried out by blood smear stained with Giemsa (protocol below) and visualized on a microscope with USB camera.
+Captured images and then processed and feeded to a pretrained DeepLearning architecture.
+Ultimately the diagnosis is mapped on a GIS system by using ArcPy.
+
 
 Giemsa Staining (thin film protocol):
 - On a clean dry microscopic glass slide, make a thin film of the specimen (blood) and leave to air dry.
