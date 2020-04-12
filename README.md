@@ -7,9 +7,9 @@ Acquisition is carried out by blood smear stained with Giemsa (protocol below) a
 Captured images and then processed and feeded to a pretrained DeepLearning architecture.
 Ultimately the diagnosis is mapped on a GIS system by using ArcPy.
 The deeplearning architecture should run on a normal PC, a RaspberryPI or be integrated into an Android app.
- 
-<img src="https://github.com/alecrimi/malaria_detection/blob/master/overall.jpg" width="200" height="220" /> 
-
+ <center>
+<img src="https://github.com/alecrimi/malaria_detection/blob/master/overall.jpg" width="230" height="200" /> 
+</center>
  
 Giemsa Staining (thin film protocol):
 - On a clean dry microscopic glass slide, make a thin film of the specimen (blood) and leave to air dry.
