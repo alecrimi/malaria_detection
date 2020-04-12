@@ -8,7 +8,7 @@ Captured images and then processed and feeded to a pretrained DeepLearning archi
 Ultimately the diagnosis is mapped on a GIS system by using ArcPy.
 The deeplearning architecture should run on a normal PC, a RaspberryPI or be integrated into an Android app.
  <center>
-<img src="https://github.com/alecrimi/malaria_detection/blob/master/overall.jpg" width="230" height="200" /> 
+<img src="https://github.com/alecrimi/malaria_detection/blob/master/overall.jpg" width="250" height="200" /> 
 </center>
  
 Giemsa Staining (thin film protocol):
@@ -20,4 +20,11 @@ Different solution and time with Giemsa stain solution can be used, [check this 
 
 GoogleColab with VGG19 without finetuning:
 https://colab.research.google.com/drive/1CUcsmtg9S9ryJZAZrQsAf7e5ouUK4gL8#scrollTo=-NJ2CxM2Rf5d
+
+to do:
+1. Testing other blood samples
+2. Retrain thick smear
+3. Android app
+4. Connection to ArcGIS server
+
 <img src="https://github.com/alecrimi/malaria_detection/blob/master/FB_IMG_1582996617130.jpg" width="200" height="260" />
