@@ -1,9 +1,14 @@
 # Current advancement on our Malaria project
 The idea is to have a complete system for acquisition, detection and report of malaria cases
 
+![Overview](https://github.com/alecrimi/malaria_detection/blob/master/overview.jpg)
+
 Acquisition is carried out by blood smear stained with Giemsa (protocol below) and visualized on a microscope with USB camera.
 Captured images and then processed and feeded to a pretrained DeepLearning architecture.
 Ultimately the diagnosis is mapped on a GIS system by using ArcPy.
+(https://github.com/alecrimi/malaria_detection/blob/master/overall.jpg)
+(https://github.com/alecrimi/malaria_detection/blob/master/FB_IMG_1582996617130.jpg)
+
 
 
 Giemsa Staining (thin film protocol):
