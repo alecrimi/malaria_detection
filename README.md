@@ -1,4 +1,4 @@
-# Current advancement on our Malaria project
+# Current progress on our Malaria project
 The idea is to have a complete system for acquisition, detection and report of malaria cases
 
 ![Overview](https://github.com/alecrimi/malaria_detection/blob/master/overview.jpg)
@@ -8,7 +8,7 @@ Captured images and then processed and feeded to a pretrained DeepLearning archi
 Ultimately the diagnosis is mapped on a GIS system by using ArcPy.
 The deeplearning architecture should run on a normal PC, a RaspberryPI or be integrated into an Android app.
  
-<img src="https://github.com/alecrimi/malaria_detection/blob/master/overall.jpg" width="200" height="230" /> 
+<img src="https://github.com/alecrimi/malaria_detection/blob/master/overall.jpg" width="200" height="220" /> 
 
  
 Giemsa Staining (thin film protocol):
