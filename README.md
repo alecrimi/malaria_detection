@@ -25,7 +25,8 @@ to do:
 1. Testing other blood samples
 2. Retrain thick smear samples
 3. Android app
-4. Connection to ArcGIS server
+4. Connection to ArcGIS server (consider migrating to AWS by using GeoDjango
+https://realpython.com/location-based-app-with-geodjango-tutorial/ )
 5. Write cell extraction using SK-image
 
 <img src="https://github.com/alecrimi/malaria_detection/blob/master/FB_IMG_1582996617130.jpg" width="200" height="260" />
