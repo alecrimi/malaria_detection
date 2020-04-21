@@ -19,12 +19,12 @@ import cv2
 # Load data
 train_images = []
 files = glob.glob ("/content/train/*.png")
-IMG_SIZE  = 28
+IMG_SIZE  = 128
 dim = 1
 
 for myFile in files:  
             try:
-                img_array = cv2.imread(myFile ,cv2.IMREAD_GRAYSCALE)  # convert to array
+                img_array = cv2.imread(myFile ,cv2.IMREAD_GRAYSCALE)  # convert to array #,cv2.IMREAD_GRAYSCALE
                 new_array = cv2.resize(img_array, (IMG_SIZE, IMG_SIZE))  # resize to normalize data size
                 train_images.append(new_array)  # add this to our training_data
             except Exception as e:  # in the interest in keeping the output clean...
@@ -38,7 +38,7 @@ train_images = np.asarray(train_images)
  
 
 # Resize and normalize
-train_images = train_images.reshape(train_images.shape[0], IMG_SIZE, IMG_SIZE, 1).astype('float32')
+train_images = train_images.reshape(train_images.shape[0], IMG_SIZE, IMG_SIZE, dim).astype('float32')
 train_images = (train_images - 127.5) / 127.5 # Normalize the images to [-1, 1]
 print(np.shape(train_images))
 print("ok")
@@ -51,7 +51,7 @@ BUFFER_SIZE = 9
 BATCH_SIZE = 3
 EPOCHS = 500
 noise_dim = 100
-num_examples_to_generate = 3
+num_examples_to_generate = 1
 
 # We will reuse this seed overtime (so it's easier)
 # to visualize progress in the animated GIF)
@@ -66,20 +66,20 @@ print(np.shape(train_dataset))
 ##################### Generator model and generator
 def make_generator_model():
     model = tf.keras.Sequential()
-    model.add(layers.Dense(7*7*256, use_bias=False, input_shape=(100,)))
+    model.add(layers.Dense( (IMG_SIZE//4) * (IMG_SIZE//4) *256, use_bias=False, input_shape=(100,)))
     model.add(layers.BatchNormalization())
     model.add(layers.LeakyReLU())
 
-    model.add(layers.Reshape((7, 7, 256)))
-    assert model.output_shape == (None, 7, 7, 256) # Note: None is the batch size
+    model.add(layers.Reshape((IMG_SIZE//4, IMG_SIZE//4, 256)))
+    assert model.output_shape == (None, IMG_SIZE//4, IMG_SIZE//4, 256) # Note: None is the batch size
 
     model.add(layers.Conv2DTranspose(128, (5, 5), strides=(1, 1), padding='same', use_bias=False))
-    assert model.output_shape == (None, 7, 7, 128)
+    assert model.output_shape == (None, IMG_SIZE//4, IMG_SIZE//4, 128)
     model.add(layers.BatchNormalization())
     model.add(layers.LeakyReLU())
 
     model.add(layers.Conv2DTranspose(64, (5, 5), strides=(2, 2), padding='same', use_bias=False))
-    assert model.output_shape == (None, 14, 14, 64)
+    assert model.output_shape == (None, IMG_SIZE//2, IMG_SIZE//2, 64)
     model.add(layers.BatchNormalization())
     model.add(layers.LeakyReLU())
 
@@ -174,7 +174,7 @@ def generate_and_save_images(model, epoch, test_input):
   fig = plt.figure(figsize=(4,4))
 
   for i in range(predictions.shape[0]):
-      plt.subplot(4, 4, i+1)
+     # plt.subplot(4, 4, i+1)
       plt.imshow(predictions[i, :, :, 0] * 127.5 + 127.5, cmap='gray')
       plt.axis('off')
 
@@ -206,8 +206,7 @@ checkpoint = tf.train.Checkpoint(generator_optimizer=generator_optimizer,
                                  generator=generator,
                                  discriminator=discriminator)
 
-
-
+ 
 
 train(train_dataset, EPOCHS)
 
