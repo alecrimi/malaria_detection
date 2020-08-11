@@ -4,11 +4,13 @@ import os
 import cv2
 import numpy as np
 from PyQt5 import QtCore, QtGui, QtWidgets                     # uic
-from PyQt5.QtWidgets import (QApplication, QMainWindow, QPushButton, QWidget,    QLabel, QVBoxLayout,QLineEdit)              # +++
-
+from PyQt5.QtWidgets import (QApplication, QMainWindow, QPushButton, QWidget,    QLabel, QVBoxLayout,QLineEdit,QMessageBox)              # +++
+ 
 from PyQt5.QtGui import QPixmap
 
 import datetime
+
+from pymongo import MongoClient
 
 #Name current file in analysis
 name =''
@@ -38,6 +40,7 @@ class SetData(QWidget):
         self.Save = QPushButton("Save", self)
         self.Save.move(100, 350)
 
+
         self.back = QPushButton("Back", self)
         self.back.move(250, 450)
 
@@ -47,6 +50,7 @@ class SetData(QWidget):
     def disableButton(self):
        if len(self.textbox.text()) > 0:
           self.Save.setEnabled(True);
+
 
 
 #Layout 3 analysis
@@ -260,6 +264,7 @@ class SetDatasWindow(QMainWindow):
         self.setWindowTitle("SetData")
         self.setCentralWidget(self.ToolTab)
         self.ToolTab.back.clicked.connect(self.startUIWindow)
+        self.ToolTab.Save.clicked.connect(self.saveData)
         self.show()
  
     def startUIWindow(self):
@@ -271,6 +276,13 @@ class SetDatasWindow(QMainWindow):
         self.hide()
         self.Window.show()
 
+    def saveData(self):
+        client = MongoClient()
+        db = client.DATABASE_malaria
+        collection = db.data
+        new_id = self.ToolTab.textbox.text()
+        post_id = collection.insert_one({"patient_id":new_id,"image_name":name}).inserted_id
+        QMessageBox.about(self, "Database ok", "Data have been saved, you can proceed with another task")
 
 class Video (QtWidgets.QDialog, Ui_Form):
     def __init__(self, parent=None):	
