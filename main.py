@@ -4,7 +4,7 @@ import os
 import cv2
 import numpy as np
 from PyQt5 import QtCore, QtGui, QtWidgets                     # uic
-from PyQt5.QtWidgets import (QApplication, QMainWindow, QPushButton, QWidget,    QLabel, QVBoxLayout,QLineEdit,QMessageBox)              # +++
+from PyQt5.QtWidgets import (QApplication, QMainWindow, QPushButton, QWidget, QLabel, QVBoxLayout, QLineEdit, QMessageBox, QTableWidget, QTableWidgetItem)              # +++
  
 from PyQt5.QtGui import QPixmap
 
@@ -16,6 +16,69 @@ from pymongo import MongoClient
 name =''
 
 ##################################### Layout classes
+#Layout Insertingdata
+class ReadData(QWidget):
+    def __init__(self, parent=None):
+        super(ReadData, self).__init__(parent)
+
+
+ 
+        client = MongoClient()
+        db = client.DATABASE_malaria
+        collection = db.data
+        lista =  list(collection.find({},{"_id":0}))
+        n_saved = int(''.join(map(str,np.shape(lista))))
+        self.tableWidget = QTableWidget()
+        self.tableWidget.setRowCount(n_saved)
+        self.tableWidget.setColumnCount(1)
+        self.tableWidget.setHorizontalHeaderLabels(["Patient ID"])
+
+
+        #Loop iterating all saved data
+        for x in range(n_saved):
+            val  = str(lista[x])
+            self.tableWidget.setItem(x,0,QTableWidgetItem(val[15:-1])) #Name shortened
+        self.tableWidget.setEditTriggers(QTableWidget.NoEditTriggers) #Set non editable
+        self.tableWidget.resizeColumnsToContents()
+        self.layout = QtWidgets.QHBoxLayout() 
+ 
+        self.labelImage = QLabel(self)
+        self.pixmap = QPixmap( 'folders.png')
+        self.smaller_pixmap =self.pixmap.scaled(400, 400, QtCore.Qt.KeepAspectRatio, QtCore.Qt.FastTransformation)
+        self.labelImage.setPixmap( self.smaller_pixmap)
+        self.labelImage.move(10, 10)
+        self.layout.addWidget(self.labelImage) 
+
+        self.layout.addWidget(self.tableWidget) 
+        self.setLayout(self.layout) 
+ 
+#        self.tableWidget.move(500,40)
+ 
+ 
+        self.show()
+        self.back = QPushButton("Back", self)
+        self.back.move(250, 450)
+         
+        self.tableWidget.doubleClicked.connect(self.on_click)
+        self.show()
+    #Personalize per image
+    def on_click(self):
+        for current in self.tableWidget.selectedItems():
+             selected=current.row()
+        client = MongoClient()
+        db = client.DATABASE_malaria
+        collection = db.data
+        imm_select =  list(collection.find({},{"image_name":1,"_id":0}))
+        val_selected = str(imm_select[selected])
+        print(val_selected[16:-2])
+        path = r'data/' 
+        self.pixmap = QPixmap(os.path.join(path, 'res_' + val_selected[16:-2]))
+        self.smaller_pixmap =self.pixmap.scaled(400, 400, QtCore.Qt.KeepAspectRatio, QtCore.Qt.FastTransformation)
+        self.labelImage.setPixmap( self.smaller_pixmap)
+        
+        self.show()
+
+
 #Layout Insertingdata
 class SetData(QWidget):
     def __init__(self, parent=None):
@@ -89,7 +152,6 @@ class UIToolTab(QWidget):
         self.smaller_pixmap =self.pixmap.scaled(200, 200, QtCore.Qt.KeepAspectRatio, QtCore.Qt.FastTransformation)
         self.labelImage.setPixmap( self.smaller_pixmap)
         self.labelImage.move(50, 100)
-
         self.CPSBTN = QPushButton("Acquire Data", self)
         self.CPSBTN.move(100, 350)
 
@@ -103,6 +165,7 @@ class UIToolTab(QWidget):
         self.database = QPushButton("Look up database", self)
         self.database.move(400, 350)
 
+ 
 
  
 
@@ -179,6 +242,7 @@ class StartWindow(QMainWindow):
         self.setWindowTitle("StartWindow")
         self.setCentralWidget(self.ToolTab)
         self.ToolTab.CPSBTN.clicked.connect(self.startUIWindow)
+        self.ToolTab.database.clicked.connect(self.startUIWindow2)
         self.show()
  
     def startUIWindow(self):
@@ -190,6 +254,42 @@ class StartWindow(QMainWindow):
 
         self.hide()
         self.Window.show()
+
+    def startUIWindow2(self):
+        self.Window = ReadDataWindow(self)
+        self.setWindowTitle("Readata")
+        #self.setCentralWidget(self.Window)f
+        #self.Window.capture.clicked.connect(self.startUIToolTab)
+        self.show()
+
+        self.hide()
+        self.Window.show()
+
+class ReadDataWindow(QMainWindow):
+    def __init__(self, parent=None):
+        super(ReadDataWindow, self).__init__(parent)
+        self.setGeometry(50, 50, 640, 480)
+        #self.showFullScreen()
+        #self.setFixedSize(400, 450)
+        self.startUIToolTab()
+
+    def startUIToolTab(self):
+        self.ToolTab = ReadData(self)
+        self.setWindowTitle("ReadData")
+        self.setCentralWidget(self.ToolTab)
+        self.ToolTab.back.clicked.connect(self.startUIWindow)
+
+  
+    def startUIWindow(self):
+        self.Window = StartWindow(self)
+        self.setWindowTitle("Analysis")
+        #self.setCentralWidget(self.Window)f
+        #self.Window.capture.clicked.connect(self.startUIToolTab)
+        self.show()
+        self.hide()
+        self.Window.show()
+ 
+
 
 class AnalysisWindow(QMainWindow):
     def __init__(self, parent=None):
@@ -241,14 +341,25 @@ class AnalysisWindow(QMainWindow):
 
     def PerformThinAnalysis(self):
 
+
+        #Load data
+        path = r'data/' 
+        #original = cv2.imwrite(os.path.join(path, name), frame)
+        img = cv2.imread(os.path.join(path, name),1)
+        print('done')
+        #perform Deeplearning classification
+
+        cv2.imwrite(os.path.join(path, 'res_' + name), img)
+        
         self.Window = SetDatasWindow(self)
         self.setWindowTitle("SetData")
-        #self.setCentralWidget(self.Window)f
+        #self.setCentralWidget(self.Window)
         #self.Window.capture.clicked.connect(self.startUIToolTab)
         self.show()
 
         self.hide()
         self.Window.show()
+
 
 
 class SetDatasWindow(QMainWindow):
