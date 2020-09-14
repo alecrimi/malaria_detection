@@ -12,8 +12,12 @@ import datetime
 
 from pymongo import MongoClient
 
+from thin_evaluation import classification_cells
+from thick_evaluation import parasite_detection
+
 #Name current file in analysis
 name =''
+count=''
 
 ##################################### Layout classes
 #Layout Readingdata
@@ -36,14 +40,14 @@ class ReadData(QWidget):
         for x in range(n_saved):
             val  = str(lista[x])
             self.tableWidget.setItem(x,0,QTableWidgetItem(val[15:-14])) #Name shortened
-            self.tableWidget.setItem(x,1,QTableWidgetItem("0")) #Name shortened
+            self.tableWidget.setItem(x,1,QTableWidgetItem(val[-14:])) #Plasmodium count
         self.tableWidget.setEditTriggers(QTableWidget.NoEditTriggers) #Set non editable
         self.tableWidget.resizeColumnsToContents()
         self.layout = QtWidgets.QHBoxLayout() 
  
         self.labelImage = QLabel(self)
         self.pixmap = QPixmap( 'folders.png')
-        self.smaller_pixmap =self.pixmap.scaled(400, 400, QtCore.Qt.KeepAspectRatio, QtCore.Qt.FastTransformation)
+        self.smaller_pixmap =self.pixmap.scaled(200, 200, QtCore.Qt.KeepAspectRatio, QtCore.Qt.FastTransformation)
         self.labelImage.setPixmap( self.smaller_pixmap)
         self.labelImage.move(10, 10)
         self.back = QPushButton("Back", self)
@@ -81,7 +85,7 @@ class ReadData(QWidget):
 #        print(val_selected[16:-2])
         path = r'data/' 
         self.pixmap = QPixmap(os.path.join(path, 'res_' + val_selected))
-        self.smaller_pixmap =self.pixmap.scaled(400, 400, QtCore.Qt.KeepAspectRatio, QtCore.Qt.FastTransformation)
+        self.smaller_pixmap =self.pixmap.scaled(200, 200, QtCore.Qt.KeepAspectRatio, QtCore.Qt.FastTransformation)
         self.labelImage.setPixmap( self.smaller_pixmap)
         
         self.show()
@@ -95,76 +99,76 @@ class SetData(QWidget):
         path = r'data/' 
         self.labelImage = QLabel(self)
         self.pixmap = QPixmap(os.path.join(path, 'res_' + name))
-        self.smaller_pixmap =self.pixmap.scaled(450, 450, QtCore.Qt.KeepAspectRatio, QtCore.Qt.FastTransformation)
+        self.smaller_pixmap =self.pixmap.scaled(250, 250, QtCore.Qt.KeepAspectRatio, QtCore.Qt.FastTransformation)
         self.labelImage.setPixmap( self.smaller_pixmap)
-        self.labelImage.move(50, 10)
+        self.labelImage.move(20, 20)
  
         self.textlabel = QLabel(self)
         self.textlabel.setText("Insert ID patient")
-        self.textlabel.move(515, 40)
-        self.textlabel.setFont(QFont('Arial', 18))
+        self.textlabel.move(290, 10)
+        self.textlabel.setFont(QFont('Arial', 16))
 
         self.textbox = QLineEdit(self)
-        self.textbox.move(540, 65)
-        self.textbox.resize(120,30)
+        self.textbox.move(310, 50)
+        self.textbox.resize(120,20)
         self.textlabel.setFont(QFont('Arial', 18))
 
         self.one = QPushButton("1", self)
-        self.one.move(530, 100)
+        self.one.move(290, 80)
         self.one.resize(40,40)
         self.one.setFont(QFont('Arial', 18))
 
 
         self.two = QPushButton("2", self)
-        self.two.move(585, 100)
+        self.two.move(360, 80)
         self.two.resize(40,40)
         self.two.setFont(QFont('Arial', 18))
 
 
         self.three = QPushButton("3", self)
-        self.three.move(640, 100)
+        self.three.move(430, 80)
         self.three.resize(40,40)
         self.three.setFont(QFont('Arial', 18))
 
 
         self.four = QPushButton("4", self)
-        self.four.move(530, 160)
+        self.four.move(290, 120)
         self.four.resize(40,40)
         self.four.setFont(QFont('Arial', 18))
 
         self.five = QPushButton("5", self)
-        self.five.move(585, 160)
+        self.five.move(360, 120)
         self.five.resize(40,40)
         self.five.setFont(QFont('Arial', 18))
 
         self.six = QPushButton("6", self)
-        self.six.move(640, 160)
+        self.six.move(430, 120)
         self.six.resize(40,40)
         self.six.setFont(QFont('Arial', 18))
 
 
         self.seven = QPushButton("7", self)
-        self.seven.move(530, 220)
+        self.seven.move(290, 160)
         self.seven.resize(40,40)
         self.seven.setFont(QFont('Arial', 18))
 
         self.eight = QPushButton("8", self)
-        self.eight.move(585, 220)
+        self.eight.move(360, 160)
         self.eight.resize(40,40)
         self.eight.setFont(QFont('Arial', 18))
 
         self.nine = QPushButton("9", self)
-        self.nine.move(640, 220)
+        self.nine.move(430, 160)
         self.nine.resize(40,40)
         self.nine.setFont(QFont('Arial', 18))
 
         self.zero = QPushButton("0", self)
-        self.zero.move(530, 280)
+        self.zero.move(290, 200)
         self.zero.resize(40,40)
         self.zero.setFont(QFont('Arial', 18))
 
         self.delete = QPushButton("delete", self)
-        self.delete.move(590, 280)
+        self.delete.move(370, 200)
         self.delete.resize(90,40)
         self.delete.setFont(QFont('Arial', 18))
 
@@ -186,13 +190,13 @@ class SetData(QWidget):
         #window.setLayout(layout)
         ''' 
         self.Save = QPushButton("Save", self)
-        self.Save.move(190, 350)
+        self.Save.move(220, 245)
         self.Save.setFont(QFont('Arial', 18))
 
 
 
         self.back = QPushButton("Back", self)
-        self.back.move(290, 450)
+        self.back.move(220, 290)
         self.back.setFont(QFont('Arial', 18))
 
         self.Save.setEnabled(False);
@@ -201,7 +205,6 @@ class SetData(QWidget):
     def disableButton(self):
        if len(self.textbox.text()) > 0:
           self.Save.setEnabled(True);
-
 
 
 #Layout 3 analysis
@@ -215,25 +218,24 @@ class Analysis(QWidget):
         #self.labelImage.setPixmap( self.smaller_pixmap)
         #self.labelImage.move(50, 100)
 
+        self.labelImage = QLabel(self)
+        self.pixmap = QPixmap("thinandthick.jpg")
+        self.smaller_pixmap =self.pixmap.scaled(400, 250, QtCore.Qt.KeepAspectRatio, QtCore.Qt.FastTransformation)
+        self.labelImage.setPixmap( self.smaller_pixmap)
+        self.labelImage.move(40, 40)
+
         self.thick = QPushButton("Thick smear", self)
-        self.thick.move(180, 350)
+        self.thick.move(70, 240)
         self.thick.setFont(QFont('Arial', 18))
 
 
-        self.labelImage = QLabel(self)
-        self.pixmap = QPixmap("thinandthick.jpg")
-        #self.smaller_pixmap =self.pixmap.scaled(200, 200, QtCore.Qt.KeepAspectRatio, QtCore.Qt.FastTransformation)
-        self.labelImage.setPixmap( self.pixmap)
-
-        self.labelImage.move(100, 100)
-
         self.thin = QPushButton("Thin smear", self)
-        self.thin.move(460, 350)
+        self.thin.move(280, 240)
         self.thin.setFont(QFont('Arial', 18))
 
 
         self.back = QPushButton("Back", self)
-        self.back.move(330, 450)
+        self.back.move(200, 280)
         self.back.setFont(QFont('Arial', 18))
 
 
@@ -244,27 +246,26 @@ class UIToolTab(QWidget):
 
         self.labelImage = QLabel(self)
         self.pixmap = QPixmap("microscope.png")
-        self.smaller_pixmap =self.pixmap.scaled(200, 200, QtCore.Qt.KeepAspectRatio, QtCore.Qt.FastTransformation)
+        self.smaller_pixmap =self.pixmap.scaled(160, 160, QtCore.Qt.KeepAspectRatio, QtCore.Qt.FastTransformation)
         self.labelImage.setPixmap( self.smaller_pixmap)
-        self.labelImage.move(120, 100)
+        self.labelImage.move(53, 53)
         self.CPSBTN = QPushButton("Acquire Data", self)
-        self.CPSBTN.move(160, 400) 
+        self.CPSBTN.move(53, 240) 
         #self.CPSBTN.resize(130, 50) 
         self.CPSBTN.setFont(QFont('Arial', 18))
 
         self.labelImage = QLabel(self)
         self.pixmap = QPixmap("folders.png")
-        self.smaller_pixmap =self.pixmap.scaled(200, 200, QtCore.Qt.KeepAspectRatio, QtCore.Qt.FastTransformation)
+        self.smaller_pixmap =self.pixmap.scaled(160, 160, QtCore.Qt.KeepAspectRatio, QtCore.Qt.FastTransformation)
         self.labelImage.setPixmap( self.smaller_pixmap)
-        self.labelImage.move(435, 100)
+        self.labelImage.move(268, 53)
 
         self.database = QPushButton("Look up database", self)
-        self.database.move(435, 400)
+        self.database.move(250, 240)
         #self.database.resize(200, 50) 
         self.database.setFont(QFont('Arial', 18))
 
  
-
  
 
 #layout1 where images are captured
@@ -272,9 +273,9 @@ class Ui_Form(QWidget):
     def setupUi(self, Form):
         Form.setObjectName("Form")
         #Form.resize(725, 586)
-        self.horizontalLayout = QtWidgets.QHBoxLayout(Form)
+        self.horizontalLayout = QtWidgets.QHBoxLayout( )
         self.horizontalLayout.setObjectName("horizontalLayout")
-        self.verticalLayout = QtWidgets.QVBoxLayout()
+        self.verticalLayout = QtWidgets.QVBoxLayout(Form)
         self.verticalLayout.setObjectName("verticalLayout")
 
         self.image_label = QtWidgets.QLabel(Form,alignment=QtCore.Qt.AlignCenter)
@@ -284,15 +285,15 @@ class Ui_Form(QWidget):
  
         self.control_bt = QtWidgets.QPushButton(Form)
         self.control_bt.setObjectName("control_bt")
-        self.control_bt.setFont(QFont('Arial', 16))
+        self.control_bt.setFont(QFont('Arial', 14))
 
-        self.verticalLayout.addWidget(self.control_bt)
+        self.horizontalLayout.addWidget(self.control_bt)
 
         self.capture = QtWidgets.QPushButton(Form)
         self.capture.setObjectName("capture")
-        self.capture.setFont(QFont('Arial', 16))
+        self.capture.setFont(QFont('Arial', 14))
 
-        self.verticalLayout.addWidget(self.capture)
+        self.horizontalLayout.addWidget(self.capture)
 
 #        self.thick = QtWidgets.QPushButton(Form)
 #        self.thick.setObjectName("thick")
@@ -311,11 +312,11 @@ class Ui_Form(QWidget):
 
         self.back = QtWidgets.QPushButton(Form)
         self.back.setObjectName("back")
-        self.back.setFont(QFont('Arial', 16))
+        self.back.setFont(QFont('Arial', 14))
 
-        self.verticalLayout.addWidget(self.back)
- 
-        self.horizontalLayout.addLayout(self.verticalLayout)
+        self.horizontalLayout.addWidget(self.back)
+        self.verticalLayout.addLayout(self.horizontalLayout) 
+     #   self.horizontalLayout.addLayout(self.verticalLayout)
 
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
@@ -336,8 +337,9 @@ class Ui_Form(QWidget):
 class StartWindow(QMainWindow):
     def __init__(self, parent=None):
         super(StartWindow, self).__init__(parent)
-        self.setGeometry(50, 50, 640, 480)
-        #self.showFullScreen()
+        #self.setGeometry(50, 50, 640, 480)
+        self.setGeometry(0, 0, 480, 320)
+        self.showFullScreen()
         #self.setFixedSize(400, 450)
         self.startUIToolTab()
 
@@ -372,7 +374,7 @@ class StartWindow(QMainWindow):
 class ReadDataWindow(QMainWindow):
     def __init__(self, parent=None):
         super(ReadDataWindow, self).__init__(parent)
-        self.setGeometry(50, 50, 640, 480)
+        self.setGeometry(50, 50, 480, 320)
         self.showFullScreen()
         #self.setFixedSize(400, 450)
         self.startUIToolTab()
@@ -431,8 +433,10 @@ class AnalysisWindow(QMainWindow):
         img = cv2.imread(os.path.join(path, name),1)
         print('done')
         #perform Deeplearning classification
+        res_img,count_plasmodium = parasite_detection(img)
+        count = count_plasmodium   
 
-        cv2.imwrite(os.path.join(path, 'res_' + name), img)
+        cv2.imwrite(os.path.join(path, 'res_' + name), res_img)
         
         self.Window = SetDatasWindow(self)
         self.setWindowTitle("SetData")
@@ -445,15 +449,17 @@ class AnalysisWindow(QMainWindow):
 
     def PerformThinAnalysis(self):
 
-
         #Load data
         path = r'data/' 
         #original = cv2.imwrite(os.path.join(path, name), frame)
         img = cv2.imread(os.path.join(path, name),1)
-        print('done')
+      
         #perform Deeplearning classification
 
-        cv2.imwrite(os.path.join(path, 'res_' + name), img)
+        res_img,count_plasmodium = classification_cells(image=img)
+        count = count_plasmodium
+ 
+        cv2.imwrite(os.path.join(path, 'res_' + name), res_img)
         
         self.Window = SetDatasWindow(self)
         self.setWindowTitle("SetData")
@@ -508,7 +514,8 @@ class SetDatasWindow(QMainWindow):
         db = client.DATABASE_malaria
         collection = db.data
         new_id = self.ToolTab.textbox.text()
-        post_id = collection.insert_one({"patient_id":new_id,"image_name":name,"count":"0"}).inserted_id
+        post_id = collection.insert_one({"patient_id":new_id,"image_name":name,"count":count}).inserted_id
+
         QMessageBox.about(self, "Database ok", "Data have been saved, you can proceed with another task")
 
     def addOne(self):
@@ -548,7 +555,7 @@ class SetDatasWindow(QMainWindow):
 class Video (QtWidgets.QDialog, Ui_Form):
     def __init__(self, parent=None):	
         super().__init__()                  
-        self.setGeometry(50, 50, 640, 480)
+        self.setGeometry(0, 0, 480, 320)
 #        uic.loadUi('test2.ui',self)                           # ---
         self.setupUi(self)                                     # +++
         self.showFullScreen()
@@ -572,7 +579,7 @@ class Video (QtWidgets.QDialog, Ui_Form):
  
 
     def streaming(self):
-        self.timer = QtCore.QTimer(self, interval=5)
+        self.timer = QtCore.QTimer(self, interval=1)
         self.timer.timeout.connect(self.update_frame)
         self._image_counter = 0
 
@@ -580,8 +587,8 @@ class Video (QtWidgets.QDialog, Ui_Form):
     def start_webcam(self):
         if self.cap is None:
             self.cap = cv2.VideoCapture(0) #default is 0
-            self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
-            self.cap.set(cv2.CAP_PROP_FRAME_WIDTH,  640)
+            self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 140)
+            self.cap.set(cv2.CAP_PROP_FRAME_WIDTH,  220)
     #        self.statlabel.setText("Streaming")
         self.timer.start()
         self.flag = 1
